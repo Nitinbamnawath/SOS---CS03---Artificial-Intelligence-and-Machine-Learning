@@ -1,55 +1,34 @@
-"""
-K-Means Clustering + Elbow Method
-Week 3 - Summer of Science 2026
-
-Dataset: sklearn's make_blobs (synthetic clustered data).
-"""
-
 import numpy as np
 import matplotlib.pyplot as plt
-from sklearn.datasets import make_blobs
 from sklearn.cluster import KMeans
 
-# ---------------------------------------------------------
-# 1. Generate dataset
-# ---------------------------------------------------------
-X, y_true = make_blobs(n_samples=300, centers=4, cluster_std=0.8, random_state=42)
+height = [150,152,155,158,160,162,165,168,170,172,175,178,180,182,185,156,163,171,177,183]
+weight = [45,48,50,52,55,57,60,63,65,68,72,75,78,80,84,49,58,67,76,82]
 
-# ---------------------------------------------------------
-# 2. Elbow method - WCSS for K = 1 to 10
-# ---------------------------------------------------------
+X = np.array(list(zip(height, weight)))
+
 wcss = []
-K_range = range(1, 11)
-for k in K_range:
+for k in range(1, 7):
     km = KMeans(n_clusters=k, n_init=10, random_state=42)
     km.fit(X)
     wcss.append(km.inertia_)
 
-plt.figure(figsize=(7, 5))
-plt.plot(K_range, wcss, marker="o", color="teal")
-plt.xlabel("Number of clusters (K)")
+plt.plot(range(1, 7), wcss, marker="o", color="teal")
+plt.xlabel("K")
 plt.ylabel("WCSS")
-plt.title("Elbow Method for Optimal K")
-plt.tight_layout()
+plt.title("Elbow Method")
 plt.savefig("/home/claude/sos_project/images/kmeans_elbow.png", dpi=150)
 plt.close()
 
-# ---------------------------------------------------------
-# 3. Final clustering with K = 4 (elbow point)
-# ---------------------------------------------------------
-km_final = KMeans(n_clusters=4, n_init=10, random_state=42)
+km_final = KMeans(n_clusters=3, n_init=10, random_state=42)
 labels = km_final.fit_predict(X)
 centers = km_final.cluster_centers_
 
-plt.figure(figsize=(7, 5))
-plt.scatter(X[:, 0], X[:, 1], c=labels, cmap="viridis", alpha=0.7, edgecolor="k")
-plt.scatter(centers[:, 0], centers[:, 1], c="red", marker="X", s=200, label="Centroids")
-plt.xlabel("Feature 1")
-plt.ylabel("Feature 2")
-plt.title("K-Means Clustering (K=4)")
-plt.legend()
-plt.tight_layout()
+plt.scatter(X[:, 0], X[:, 1], c=labels, cmap="viridis", edgecolor="k")
+plt.scatter(centers[:, 0], centers[:, 1], c="red", marker="X", s=200)
+plt.xlabel("Height (cm)")
+plt.ylabel("Weight (kg)")
+plt.title("K-Means Clustering (K=3)")
 plt.savefig("/home/claude/sos_project/images/kmeans_clusters.png", dpi=150)
 plt.close()
 
-print("Saved: kmeans_elbow.png, kmeans_clusters.png")
