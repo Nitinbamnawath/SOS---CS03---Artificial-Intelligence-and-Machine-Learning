@@ -39,4 +39,3 @@ plt.tight_layout()
 plt.savefig("dtree_confusion_.png")
 plt.show()
 
-
